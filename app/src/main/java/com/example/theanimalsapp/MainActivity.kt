@@ -45,18 +45,14 @@ fun TheAnimalsApp() {
     TheAnimalsAppTheme {
         val navController = rememberNavController()
 
-        // Configurar el NavHost
-        NavHost(
-            navController = navController,
-            startDestination = "animalList"
-        ) {
+        NavHost(navController = navController, startDestination = "animalList") {
             composable("animalList") {
                 AnimalListScreen { animalId ->
                     navController.navigate("animalDetail/$animalId")
                 }
             }
             composable("animalDetail/{animalId}") { backStackEntry ->
-                val animalId = backStackEntry.arguments?.getString("animalId")?.toIntOrNull()
+                val animalId = backStackEntry.arguments?.getString("animalId")
                 if (animalId != null) {
                     AnimalDetailScreen(animalId = animalId)
                 } else {

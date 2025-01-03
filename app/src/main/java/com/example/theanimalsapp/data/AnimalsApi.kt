@@ -4,15 +4,18 @@ import retrofit2.http.GET
 import retrofit2.http.Path
 
 data class Animal(
-    val id: Int,
+    val _id: String,
     val name: String,
     val image: String,
     val description: String,
+    val imageGallery: List<String>,
+    val environmentId: String,
     val facts: List<String>
 )
 
+
 data class Environment(
-    val id: Int,
+    val _id: String,
     val name: String,
     val image: String,
     val description: String,
@@ -27,8 +30,8 @@ interface AnimalsApi {
     suspend fun getEnvironments(): List<Environment>
 
     @GET("animals/{id}")
-    suspend fun getAnimalDetail(@Path("id") id: Int): Animal
+    suspend fun getAnimalDetail(@Path("id") id: String): Animal
 
     @GET("environments/{id}")
-    suspend fun getEnvironmentDetail(@Path("id") id: Int): Environment
+    suspend fun getEnvironmentDetail(@Path("id") id: String): Environment
 }

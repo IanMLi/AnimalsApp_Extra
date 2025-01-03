@@ -1,6 +1,5 @@
 package com.example.theanimalsapp.ui.animals
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -18,7 +17,7 @@ import com.example.theanimalsapp.data.Animal
 import kotlinx.coroutines.launch
 
 @Composable
-fun AnimalListScreen(onAnimalClick: (Int) -> Unit) {
+fun AnimalListScreen(onAnimalClick: (String) -> Unit) {
     var animals by remember { mutableStateOf<List<Animal>>(emptyList()) }
     var isLoading by remember { mutableStateOf(true) }
     var errorMessage by remember { mutableStateOf<String?>(null) }
@@ -38,9 +37,13 @@ fun AnimalListScreen(onAnimalClick: (Int) -> Unit) {
 
     // Mostrar contenido
     if (isLoading) {
-        Text("Cargando animales...", Modifier.fillMaxSize(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text("Cargando animales...")
+        }
     } else if (errorMessage != null) {
-        Text(errorMessage ?: "Error desconocido", Modifier.fillMaxSize(), textAlign = androidx.compose.ui.text.style.TextAlign.Center)
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Text(errorMessage ?: "Error desconocido")
+        }
     } else {
         LazyColumn(
             modifier = Modifier
@@ -48,7 +51,7 @@ fun AnimalListScreen(onAnimalClick: (Int) -> Unit) {
                 .padding(16.dp)
         ) {
             items(animals.size) { index ->
-                AnimalItem(animal = animals[index], onClick = { onAnimalClick(animals[index].id) })
+                AnimalItem(animal = animals[index], onClick = { onAnimalClick(animals[index]._id) })
             }
         }
     }
