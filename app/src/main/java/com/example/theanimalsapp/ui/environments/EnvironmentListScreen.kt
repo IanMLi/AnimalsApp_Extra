@@ -14,7 +14,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.theanimalsapp.data.ApiClient
 import com.example.theanimalsapp.data.Environment
-import kotlinx.coroutines.launch
 
 @Composable
 fun EnvironmentListScreen(onEnvironmentClick: (String) -> Unit) {
