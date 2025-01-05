@@ -72,11 +72,17 @@ fun TheAnimalsApp() {
                 composable("environmentDetail/{environmentId}") { backStackEntry ->
                     val environmentId = backStackEntry.arguments?.getString("environmentId")
                     if (environmentId != null) {
-                        EnvironmentDetailScreen(environmentId = environmentId)
+                        EnvironmentDetailScreen(
+                            environmentId = environmentId,
+                            onAnimalClick = { animalId ->
+                                navController.navigate("animalDetail/$animalId")
+                            }
+                        )
                     } else {
                         Text("Error: ID del ambiente no válido")
                     }
                 }
+
             }
         }
     }

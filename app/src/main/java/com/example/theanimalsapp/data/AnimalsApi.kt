@@ -2,6 +2,8 @@ package com.example.theanimalsapp.data
 
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
+
 
 data class Animal(
     val _id: String,
@@ -34,4 +36,8 @@ interface AnimalsApi {
 
     @GET("environments/{id}")
     suspend fun getEnvironmentDetail(@Path("id") id: String): Environment
+
+    @GET("animals")
+    suspend fun getAnimalsByEnvironment(@Query("environmentId") environmentId: String): List<Animal>
+
 }
