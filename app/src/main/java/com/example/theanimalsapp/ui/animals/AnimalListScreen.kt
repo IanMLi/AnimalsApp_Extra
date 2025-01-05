@@ -4,7 +4,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
+import androidx.compose.material3.*
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -15,6 +15,9 @@ import coil.compose.AsyncImage
 import com.example.theanimalsapp.data.ApiClient
 import com.example.theanimalsapp.data.Animal
 import kotlinx.coroutines.launch
+import androidx.compose.ui.graphics.Color
+import com.example.theanimalsapp.ui.theme.*
+
 
 @Composable
 fun AnimalListScreen(onAnimalClick: (String) -> Unit) {
@@ -64,7 +67,8 @@ fun AnimalItem(animal: Animal, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(vertical = 8.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(containerColor = Color.White)
     ) {
         Row(
             modifier = Modifier
@@ -80,9 +84,11 @@ fun AnimalItem(animal: Animal, onClick: () -> Unit) {
                     .padding(end = 16.dp),
                 contentScale = ContentScale.Crop
             )
-            Column {
-                Text(text = animal.name, style = androidx.compose.material3.MaterialTheme.typography.titleMedium)
-            }
+            Text(
+                text = animal.name,
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.primary
+            )
         }
     }
 }

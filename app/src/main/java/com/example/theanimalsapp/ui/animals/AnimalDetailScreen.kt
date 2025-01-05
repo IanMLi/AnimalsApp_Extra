@@ -14,6 +14,8 @@ import coil.compose.AsyncImage
 import com.example.theanimalsapp.data.ApiClient
 import com.example.theanimalsapp.data.Animal
 import kotlinx.coroutines.launch
+import com.example.theanimalsapp.ui.theme.*
+
 
 @Composable
 fun AnimalDetailScreen(animalId: String) {

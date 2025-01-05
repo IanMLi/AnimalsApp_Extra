@@ -22,6 +22,9 @@ import com.example.theanimalsapp.ui.theme.TheAnimalsAppTheme
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.layout.padding
+import com.example.theanimalsapp.ui.theme.LightGrayBackground
+import androidx.compose.material3.CardDefaults
+import com.example.theanimalsapp.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,12 +98,14 @@ fun BottomNavigationBar(navController: NavHostController) {
         NavigationItem("Ambientes", "environmentList", Icons.Default.Home)
     )
 
-    NavigationBar {
+    NavigationBar(
+        containerColor = LightGrayBackground
+    ) {
         val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
         items.forEach { item ->
             NavigationBarItem(
                 icon = { Icon(imageVector = item.icon, contentDescription = item.label) },
-                label = { Text(item.label) },
+                label = { Text(item.label, style = MaterialTheme.typography.bodyMedium) },
                 selected = currentRoute == item.route,
                 onClick = {
                     navController.navigate(item.route) {

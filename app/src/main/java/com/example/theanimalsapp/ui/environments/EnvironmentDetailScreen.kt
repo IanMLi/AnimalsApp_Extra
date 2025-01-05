@@ -18,6 +18,8 @@ import androidx.compose.material3.Card
 import coil.compose.AsyncImage
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.foundation.clickable
+import com.example.theanimalsapp.ui.theme.*
+
 
 @Composable
 fun EnvironmentDetailScreen(
