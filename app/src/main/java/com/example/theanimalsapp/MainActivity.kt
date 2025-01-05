@@ -103,17 +103,14 @@ fun BottomNavigationBar(navController: NavHostController) {
                 label = { Text(item.label) },
                 selected = currentRoute == item.route,
                 onClick = {
-                    if (currentRoute != item.route) {
-                        navController.navigate(item.route) {
-                            popUpTo(navController.graph.startDestinationId) { saveState = true }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
+                    navController.navigate(item.route) {
+                        popUpTo(navController.graph.startDestinationId) { inclusive = false }
+                        launchSingleTop = true
+                        restoreState = true
                     }
                 }
             )
         }
     }
 }
-
 data class NavigationItem(val label: String, val route: String, val icon: ImageVector)
