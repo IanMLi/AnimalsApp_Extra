@@ -19,12 +19,9 @@ import com.example.theanimalsapp.ui.animals.AnimalListScreen
 import com.example.theanimalsapp.ui.environments.EnvironmentDetailScreen
 import com.example.theanimalsapp.ui.environments.EnvironmentListScreen
 import com.example.theanimalsapp.ui.theme.TheAnimalsAppTheme
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.foundation.layout.padding
 import com.example.theanimalsapp.ui.theme.LightGrayBackground
-import androidx.compose.material3.CardDefaults
-import com.example.theanimalsapp.ui.theme.*
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

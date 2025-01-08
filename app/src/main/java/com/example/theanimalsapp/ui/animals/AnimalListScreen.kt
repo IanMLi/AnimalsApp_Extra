@@ -1,11 +1,11 @@
 package com.example.theanimalsapp.ui.animals
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
-import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -14,10 +14,6 @@ import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.theanimalsapp.data.ApiClient
 import com.example.theanimalsapp.data.Animal
-import kotlinx.coroutines.launch
-import androidx.compose.ui.graphics.Color
-import com.example.theanimalsapp.ui.theme.*
-
 
 @Composable
 fun AnimalListScreen(onAnimalClick: (String) -> Unit) {
@@ -38,23 +34,65 @@ fun AnimalListScreen(onAnimalClick: (String) -> Unit) {
         }
     }
 
-    // Mostrar contenido
-    if (isLoading) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text("Cargando animales...")
-        }
-    } else if (errorMessage != null) {
-        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(errorMessage ?: "Error desconocido")
-        }
-    } else {
-        LazyColumn(
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ) {
+        // Encabezado
+        Box(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .background(MaterialTheme.colorScheme.primary)
                 .padding(16.dp)
         ) {
-            items(animals.size) { index ->
-                AnimalItem(animal = animals[index], onClick = { onAnimalClick(animals[index]._id) })
+            Text(
+                text = "Lista de Animales",
+                style = MaterialTheme.typography.titleLarge,
+                color = MaterialTheme.colorScheme.onPrimary
+            )
+        }
+
+        // Contenido principal
+        when {
+            isLoading -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
+            }
+            errorMessage != null -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = errorMessage ?: "Error desconocido",
+                    color = MaterialTheme.colorScheme.error,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            animals.isEmpty() -> Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "No se encontraron animales.",
+                    color = MaterialTheme.colorScheme.onBackground,
+                    style = MaterialTheme.typography.bodyLarge
+                )
+            }
+            else -> LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
+                items(animals.size) { index ->
+                    AnimalItem(
+                        animal = animals[index],
+                        onClick = { onAnimalClick(animals[index]._id) }
+                    )
+                }
             }
         }
     }
@@ -65,17 +103,16 @@ fun AnimalItem(animal: Animal, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = Color.White)
+        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+        elevation = CardDefaults.cardElevation(4.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
+            modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Imagen del animal
             AsyncImage(
                 model = animal.image,
                 contentDescription = animal.name,
@@ -84,11 +121,20 @@ fun AnimalItem(animal: Animal, onClick: () -> Unit) {
                     .padding(end = 16.dp),
                 contentScale = ContentScale.Crop
             )
-            Text(
-                text = animal.name,
-                style = MaterialTheme.typography.titleMedium,
-                color = MaterialTheme.colorScheme.primary
-            )
+            // Nombre y descripción del animal
+            Column {
+                Text(
+                    text = animal.name,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = animal.description.take(50) + "...",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.secondary
+                )
+            }
         }
     }
 }

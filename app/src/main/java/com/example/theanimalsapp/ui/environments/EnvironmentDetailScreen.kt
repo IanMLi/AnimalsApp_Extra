@@ -1,25 +1,24 @@
 package com.example.theanimalsapp.ui.environments
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.theanimalsapp.data.ApiClient
 import com.example.theanimalsapp.data.Animal
 import com.example.theanimalsapp.data.Environment
-import kotlinx.coroutines.launch
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import coil.compose.AsyncImage
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.foundation.clickable
-import com.example.theanimalsapp.ui.theme.*
-
+import kotlinx.coroutines.delay
 
 @Composable
 fun EnvironmentDetailScreen(
@@ -46,17 +45,18 @@ fun EnvironmentDetailScreen(
 
     if (isLoading) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            CircularProgressIndicator()
+            CircularProgressIndicator(color = Color(0xFFB1E693))
         }
     } else if (errorMessage != null) {
         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-            Text(errorMessage ?: "Error desconocido")
+            Text(errorMessage ?: "Error desconocido", color = Color.White)
         }
     } else {
         environment?.let { env ->
             Column(
                 modifier = Modifier
                     .fillMaxSize()
+                    .background(Color(0xFF2C3E50))
                     .padding(16.dp)
             ) {
                 AsyncImage(
@@ -64,19 +64,36 @@ fun EnvironmentDetailScreen(
                     contentDescription = env.name,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp),
+                        .height(200.dp)
+                        .background(Color.DarkGray, shape = RoundedCornerShape(12.dp)),
                     contentScale = ContentScale.Crop
                 )
                 Spacer(modifier = Modifier.height(16.dp))
-                Text(text = env.name, style = androidx.compose.material3.MaterialTheme.typography.titleLarge)
+                Text(
+                    text = env.name,
+                    style = MaterialTheme.typography.headlineMedium.copy(
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFB1E693)
+                    )
+                )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = env.description, style = androidx.compose.material3.MaterialTheme.typography.bodyLarge)
+                Text(
+                    text = env.description,
+                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
+                )
                 Spacer(modifier = Modifier.height(16.dp))
 
-                Text(text = "Animales en este ambiente:", style = androidx.compose.material3.MaterialTheme.typography.titleMedium)
-                LazyColumn(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                Text(
+                    text = "Animales en este ambiente:",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        fontWeight = FontWeight.SemiBold,
+                        color = Color(0xFFB1E693)
+                    )
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                LazyRow(
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     items(animals.size) { index ->
                         AnimalItem(animal = animals[index], onClick = { onAnimalClick(animals[index]._id) })
@@ -91,29 +108,56 @@ fun EnvironmentDetailScreen(
 fun AnimalItem(animal: Animal, onClick: () -> Unit) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp)
+            .width(120.dp)
             .clickable { onClick() },
-        shape = RoundedCornerShape(8.dp)
+        shape = RoundedCornerShape(8.dp),
+        colors = CardDefaults.cardColors(containerColor = Color(0xFF34495E))
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier.padding(8.dp)
         ) {
             AsyncImage(
                 model = animal.image,
                 contentDescription = animal.name,
                 modifier = Modifier
-                    .size(64.dp)
-                    .padding(end = 16.dp),
+                    .size(80.dp)
+                    .background(Color.Gray, shape = CircleShape),
                 contentScale = ContentScale.Crop
             )
+            Spacer(modifier = Modifier.height(8.dp))
             Text(
                 text = animal.name,
-                style = androidx.compose.material3.MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    color = Color.White,
+                    fontWeight = FontWeight.Medium
+                ),
+                maxLines = 1
             )
         }
+    }
+}
+
+@Composable
+fun AutoScrollingCarousel(images: List<String>, modifier: Modifier = Modifier) {
+    var currentIndex by remember { mutableStateOf(0) }
+
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(3000)
+            currentIndex = (currentIndex + 1) % images.size
+        }
+    }
+
+    Box(modifier = modifier) {
+        AsyncImage(
+            model = images[currentIndex],
+            contentDescription = "Galería",
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(200.dp)
+                .background(Color.DarkGray, shape = RoundedCornerShape(12.dp)),
+            contentScale = ContentScale.Crop
+        )
     }
 }
