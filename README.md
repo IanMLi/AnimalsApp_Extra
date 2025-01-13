@@ -29,7 +29,7 @@ Este proyecto es una aplicación Android que muestra información sobre animales
    Si es la primera vez que ejecutas el proyecto, asegúrate de que las dependencias estén descargadas. Android Studio debería hacer esto automáticamente. Si no es así, puedes ir a `File > Sync Project with Gradle Files`.
 
 4. **Configuración de Retrofit**:
-   Asegúrate de que las URL o configuraciones de Retrofit estén correctamente configuradas en la aplicación para poder acceder a la API. Esto puede estar en un archivo de configuración como `ApiService.kt` o `RetrofitClient.kt`.
+   Asegúrate de que las URL o configuraciones de Retrofit estén correctamente configuradas en la aplicación para poder acceder a la API. Esto puede estar en un archivo de configuración como `AnimalsApi.kt` o `ApiClient.kt`.
 
 5. **Ejecutar la aplicación**:
    Conecta un dispositivo o inicia un emulador Android, y luego presiona el botón de "Run" en Android Studio para ejecutar la aplicación.
