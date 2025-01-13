@@ -19,20 +19,3 @@ val Typography = Typography(
 )
 
 
-//val Roboto = FontFamily(
-//    Font(R.font.roboto_regular),
-//    Font(R.font.roboto_bold)
-//)
-//
-//val Typography = Typography(
-//    titleLarge = TextStyle(
-//        fontFamily = Roboto,
-//        fontSize = 22.sp,
-//        lineHeight = 28.sp
-//    ),
-//    bodyLarge = TextStyle(
-//        fontFamily = Roboto,
-//        fontSize = 16.sp,
-//        lineHeight = 22.sp
-//    )
-//)

@@ -2,17 +2,22 @@ package com.example.theanimalsapp.ui.animals
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.theanimalsapp.data.ApiClient
 import com.example.theanimalsapp.data.Animal
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AnimalDetailScreen(animalId: String) {
     var animal by remember { mutableStateOf<Animal?>(null) }
@@ -32,120 +37,127 @@ fun AnimalDetailScreen(animalId: String) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ) {
-        // Encabezado
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(MaterialTheme.colorScheme.primary)
-                .padding(16.dp)
-        ) {
-            Text(
-                text = "Detalles del Animal",
-                style = MaterialTheme.typography.titleLarge,
-                color = MaterialTheme.colorScheme.onPrimary
-            )
-        }
-
-        // Contenido principal
-        when {
-            isLoading -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-            }
-            errorMessage != null -> Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = errorMessage ?: "Error desconocido",
-                    color = MaterialTheme.colorScheme.error,
-                    style = MaterialTheme.typography.bodyLarge
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Detalle del Animal") },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF2C3E50),
+                    titleContentColor = Color(0xFFB1E693)
                 )
-            }
-            else -> animal?.let { animalData ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    // Imagen principal
-                    AsyncImage(
-                        model = animalData.image,
-                        contentDescription = animalData.name,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp),
-                        contentScale = ContentScale.Crop
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Nombre
-                    Text(
-                        text = animalData.name,
-                        style = MaterialTheme.typography.titleLarge,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Descripción
-                    Text(
-                        text = animalData.description,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Galería de imágenes
-                    Text(
-                        text = "Galería de Imágenes",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    LazyRow(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(8.dp)
+            )
+        },
+        content = { paddingValues ->
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .background(Color(0xFF2C3E50))
+            ) {
+                when {
+                    isLoading -> Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
                     ) {
-                        items(animalData.imageGallery.size) { index ->
-                            AsyncImage(
-                                model = animalData.imageGallery[index],
-                                contentDescription = "Imagen ${index + 1}",
-                                modifier = Modifier
-                                    .size(100.dp)
-                                    .padding(4.dp),
-                                contentScale = ContentScale.Crop
-                            )
-                        }
+                        CircularProgressIndicator(color = Color(0xFFB1E693))
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Lista de hechos interesantes
-                    Text(
-                        text = "Hechos Interesantes",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.primary
-                    )
-                    Spacer(modifier = Modifier.height(8.dp))
-                    animalData.facts.forEach { fact ->
+                    errorMessage != null -> Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text(
-                            text = "- $fact",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.secondary
+                            text = errorMessage ?: "Error desconocido",
+                            color = Color.White,
+                            style = MaterialTheme.typography.bodyLarge
                         )
+                    }
+                    else -> animal?.let { animalData ->
+                        LazyColumn(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .padding(16.dp),
+                            verticalArrangement = Arrangement.spacedBy(16.dp)
+                        ) {
+                            // Imagen principal
+                            item {
+                                AsyncImage(
+                                    model = animalData.image,
+                                    contentDescription = animalData.name,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .height(200.dp)
+                                        .clip(RoundedCornerShape(12.dp)),
+                                    contentScale = ContentScale.Crop
+                                )
+                            }
+
+                            // Nombre
+                            item {
+                                Text(
+                                    text = animalData.name,
+                                    style = MaterialTheme.typography.headlineMedium.copy(
+                                        fontWeight = FontWeight.Bold,
+                                        color = Color(0xFFB1E693)
+                                    )
+                                )
+                            }
+
+                            // Descripción
+                            item {
+                                Text(
+                                    text = animalData.description,
+                                    style = MaterialTheme.typography.bodyLarge.copy(color = Color.White)
+                                )
+                            }
+
+                            // Galería de imágenes
+                            if (animalData.imageGallery.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        text = "Galería de Imágenes",
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFFB1E693)
+                                        )
+                                    )
+                                }
+                                items(animalData.imageGallery.size) { index ->
+                                    AsyncImage(
+                                        model = animalData.imageGallery[index],
+                                        contentDescription = "Imagen ${index + 1}",
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(150.dp)
+                                            .clip(RoundedCornerShape(12.dp)),
+                                        contentScale = ContentScale.Crop
+                                    )
+                                }
+                            }
+
+                            // Lista de hechos interesantes
+                            if (animalData.facts.isNotEmpty()) {
+                                item {
+                                    Text(
+                                        text = "Hechos Interesantes",
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.SemiBold,
+                                            color = Color(0xFFB1E693)
+                                        )
+                                    )
+                                }
+                                items(animalData.facts.size) { index ->
+                                    Text(
+                                        text = "- ${animalData.facts[index]}",
+                                        style = MaterialTheme.typography.bodyMedium.copy(
+                                            color = Color.White
+                                        )
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
         }
-    }
+    )
 }
